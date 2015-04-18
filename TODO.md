@@ -1,10 +1,4 @@
-## noculus: Network Visualisation Sandbox
-Created: 15 February 2015
-Version: 0.1
-**ben.dale@gmail.com**
-
-
-###TODO
+##TODO
 
 * Click node to toggle selection
 * Shift-clicking node adds to selection (mutex brush?)
