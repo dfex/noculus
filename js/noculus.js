@@ -28,7 +28,7 @@ var brush = svg.append("g")
 
 var node = svg.append("g")
     .attr("class", "node")
-  .selectAll("rect");
+    .selectAll("rect");
 
 d3.json("js/topology.json", function(error, graph) {
 
@@ -38,10 +38,10 @@ d3.json("js/topology.json", function(error, graph) {
   });
 
   link = link.data(graph.links).enter().append("line")
-      .attr("x1", function(d) { return d.source.x+nodeWidth/2; })
-      .attr("y1", function(d) { return d.source.y+nodeHeight/2; })
-      .attr("x2", function(d) { return d.target.x+nodeWidth/2; })
-      .attr("y2", function(d) { return d.target.y+nodeHeight/2; });
+      .attr("x1", function(d) { return d.source.x+d.source.width/2; })
+      .attr("y1", function(d) { return d.source.y+d.source.height/2; })
+      .attr("x2", function(d) { return d.target.x+d.target.width/2; })
+      .attr("y2", function(d) { return d.target.y+d.target.height/2; });
 
   brush.call(d3.svg.brush()
         .x(d3.scale.identity().domain([0, width]))
@@ -74,7 +74,13 @@ d3.json("js/topology.json", function(error, graph) {
         }
       })
       .on("mouseup", function(d) {
-        if (d.selected && shiftKey) d3.select(this).classed("selected", d.selected = false);
+        if (d.selected && shiftKey)
+            d3.select(this).classed("selected", d.selected = false)
+        else
+            d3.select(this).classed("selected", d.selected = true); /* shift-click select/deselect */
+
+        if (d.selected = false) d3.select(this).classed("selected", d.selected = true); /* click to select */
+
       })
       .call(d3.behavior.drag()
         .on("drag", function(d) { nudge(d3.event.dx, d3.event.dy); }));
@@ -87,12 +93,12 @@ function nudge(dx, dy) {
       .attr("y", function(d) { return d.y += dy; })
 
   link.filter(function(d) { return d.source.selected; })
-      .attr("x1", function(d) { return d.source.x+nodeWidth/2; })
-      .attr("y1", function(d) { return d.source.y+nodeHeight/2; });
+      .attr("x1", function(d) { return d.source.x+d.source.width/2; })
+      .attr("y1", function(d) { return d.source.y+d.source.height/2; });
 
   link.filter(function(d) { return d.target.selected; })
-      .attr("x2", function(d) { return d.target.x+nodeWidth/2; })
-      .attr("y2", function(d) { return d.target.y+nodeHeight/2; });
+      .attr("x2", function(d) { return d.target.x+d.target.width/2; })
+      .attr("y2", function(d) { return d.target.y+d.target.height/2; });
 
   d3.event.preventDefault();
 }
